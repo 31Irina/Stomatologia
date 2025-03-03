@@ -28,7 +28,6 @@ app.get("/appointments", (req, res) => {
 });
 
 // Встановлюємо порт для сервера
-const port = process.env.PORT || 3000;
-app.listen(port, "0.0.0.0", () => {
-    console.log(`Server running on http://localhost:${port}`);
+app.listen(3000, "0.0.0.0", () => {
+    console.log("Server running on http://localhost:3000");
 });
