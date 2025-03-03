@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Послуги</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+    <!-- Шапка сайту -->
+    <header>
+        <h1>Послуги нашої стоматологічної клініки</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Головна</a></li>
+                <li><a href="/services">Послуги</a></li>
+                <li><a href="/patients">Пацієнти</a></li>
+                <li><a href="/appointments">Записи на прийом</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Основний контент -->
+    <main>
+        <section class="services-list">
+            <h2>Наші послуги</h2>
+            <div class="service-cards">
+                <% services.forEach(service => { %>
+                    <div class="service-card">
+                        <h3><%= service.name %></h3>
+                        <p><%= service.description %></p>
+                        <p><strong>Ціна: </strong><%= service.price %> грн.</p>
+                        <a href="/appointments?service_id=<%= service.id %>" class="btn">Записатися на прийом</a>
+                    </div>
+                <% }) %>
+            </div>
+        </section>
+    </main>
+
+    <!-- Підвал сайту -->
+    <footer>
+        <p>&copy; 2025 Стоматологічна клініка. Усі права захищено.</p>
+    </footer>
+
+</body>
+</html>

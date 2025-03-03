@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Записи на прийом</title>
+</head>
+<body>
+    <h1>Записи на прийом</h1>
+    <ul id="appointments-list"></ul>
+
+    <script>
+        fetch('http://localhost:3000/appointments')
+            .then(response => response.json())
+            .then(data => {
+                const list = document.getElementById('appointments-list');
+                data.forEach(app => {
+                    const item = document.createElement('li');
+                    item.textContent = `${app.date} ${app.time} - ${app.patient_name} (${app.service_name})`;
+                    list.appendChild(item);
+                });
+            })
+            .catch(error => console.error(error));
+    </script>
+</body>
+</html>

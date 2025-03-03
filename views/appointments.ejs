@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Запис на прийом</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+    <h1>Реєстрація та запис на прийом</h1>
+
+    <!-- Форма для реєстрації нового пацієнта -->
+    <h2>Реєстрація нового пацієнта</h2>
+    <form id="registerPatientForm">
+        <label for="name">Ім'я:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="phone">Телефон:</label>
+        <input type="text" id="phone" name="phone" required>
+
+        <button type="submit">Зареєструватися</button>
+    </form>
+
+    <hr>
+
+    <!-- Форма для запису на прийом -->
+    <h2>Запис на прийом</h2>
+    <form method="POST" action="/appointments">
+        <label for="patient_id">Пацієнт:</label>
+        <select id="patient_id" name="patient_id" required>
+            <% patients.forEach(patient => { %>
+                <option value="<%= patient.id %>"><%= patient.name %></option>
+            <% }) %>
+        </select>
+
+        <label for="service_id">Послуга:</label>
+        <select id="service_id" name="service_id" required>
+            <% services.forEach(service => { %>
+                <option value="<%= service.id %>"><%= service.name %></option>
+            <% }) %>
+        </select>
+
+        <label for="appointment_date">Дата прийому:</label>
+        <input type="datetime-local" id="appointment_date" name="appointment_date" required>
+
+        <label for="status">Статус:</label>
+        <input type="text" id="status" name="status" value="Pending" required>
+
+        <button type="submit">Записати</button>
+    </form>
+
+    <hr>
+
+    <h2><a href="/appointments-list">Переглянути записи на прийом</a></h2>
+
+    <script>
+        document.getElementById('registerPatientForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Забороняємо перезавантаження сторінки
+
+            const formData = new FormData(this);
+            const response = await fetch('/register-patient', {
+                method: 'POST',
+                body: new URLSearchParams(formData) // Коректне відправлення даних
+            });
+
+            if (response.ok) {
+                const newPatient = await response.json(); // Отримуємо нового пацієнта
+                const patientSelect = document.getElementById('patient_id');
+
+                // Додаємо нового пацієнта у випадаючий список
+                const newOption = document.createElement('option');
+                newOption.value = newPatient.id;
+                newOption.textContent = newPatient.name;
+                patientSelect.appendChild(newOption);
+
+                // Вибираємо його автоматично
+                patientSelect.value = newPatient.id;
+
+                // Очищаємо форму
+                this.reset();
+            } else {
+                alert('Помилка при реєстрації пацієнта!');
+            }
+        });
+    </script>
+</body>
+</html>

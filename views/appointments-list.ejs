@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список записів</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+    <h1>Список записів на прийом</h1>
+    <ul>
+        <% appointments.forEach(appointment => { %>
+            <li>
+                Пацієнт: <%= appointment.patient_id %>, 
+                Послуга: <%= appointment.service_id %>, 
+                Дата прийому: <%= appointment.appointment_date %>, 
+                Статус: <%= appointment.status %>
+            </li>
+        <% }) %>
+    </ul>
+    <br>
+    <a href="/appointments">Повернутися до форми запису</a>
+</body>
+</html>

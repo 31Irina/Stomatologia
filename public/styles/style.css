@@ -1,0 +1,145 @@
+/* Загальні стилі для всього сайту */
+/* Загальні стилі для всього сайту */
+/* Загальні стилі для всього сайту */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('/images/зуб.jpg'); /* Вказуємо шлях до картинки */
+    background-size: cover; /* Картинка покриває весь екран */
+    background-position: center center; /* Центруємо картинку */
+    background-repeat: no-repeat; /* Картинка не повторюється */
+    color: #333;
+}
+h1 {
+    color: #4CAF50;
+    text-align: center;
+    padding: 20px 0;
+    font-size: 2.5em;
+}
+
+h2 {
+    color: #333;
+    font-size: 1.8em;
+    text-align: center;
+}
+
+p {
+    font-size: 1em;
+    line-height: 1.5;
+    color: #555;
+}
+
+a {
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Стилі для навігаційного меню */
+nav {
+    background-color: #333;
+    padding: 10px 0;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    text-align: center;
+}
+
+nav ul li {
+    display: inline-block;
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: #fff;
+    font-size: 1.2em;
+    padding: 8px 16px;
+    display: inline-block;
+}
+
+nav ul li a:hover {
+    background-color: #4CAF50;
+    border-radius: 5px;
+}
+
+/* Стилі для основного контенту */
+main {
+    padding: 20px;
+    text-align: center;
+}
+
+/* Стилі для карток послуг */
+.service-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.service-card {
+    width: 300px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    height: 350px; /* Висота картки */
+}
+
+.service-card h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.service-card p {
+    font-size: 1em;
+    margin-bottom: 15px;
+    flex-grow: 1; /* Розтягує текст */
+}
+
+.service-card .btn {
+    display: inline-block; /* Кнопка займатиме тільки необхідну ширину */
+    padding: 10px 20px; /* Відступи всередині кнопки */
+    background-color: #000000; /* Чорний колір фону */
+    color: #fff; /* Білий текст */
+    text-decoration: none; /* Без підкреслення */
+    border-radius: 5px; /* Закруглені кути */
+    text-align: center; /* Вирівнювання тексту всередині */
+    margin-top: auto;
+    width: auto; /* Ширина автоматична в залежності від тексту */
+    transition: background-color 0.3s ease;
+}
+
+.service-card .btn:hover {
+    background-color: #333333; /* Темний відтінок чорного при наведенні */
+}
+
+/* Стилі для підвалу сайту */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #f1f1f1;
+    margin-top: 40px;
+}
+
+/* Адаптивність для мобільних пристроїв */
+@media screen and (max-width: 768px) {
+    .service-cards {
+        display: block;
+    }
+
+    .service-card {
+        width: 100%; /* Картки займають всю ширину на мобільних */
+        margin-bottom: 20px;
+    }
+}

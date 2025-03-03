@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Пацієнти</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+    <h1>Список пацієнтів</h1>
+    <ul>
+        <% patients.forEach(patient => { %>
+            <li>
+                <strong><%= patient.name %></strong> - <%= patient.email %>
+            </li>
+        <% }) %>
+    </ul>
+</body>
+</html>
