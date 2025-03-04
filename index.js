@@ -1,47 +1,67 @@
 const express = require("express");
+const { Pool } = require("pg");
 const path = require("path");
+
 const app = express();
+const port = process.env.PORT || 10000;
 
-// Встановлюємо EJS як шаблонний движок
+// 📌 Підключення до PostgreSQL (використовує змінні середовища Render)
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL, // Render надає цю змінну автоматично
+    ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
+});
+
+// 📌 Налаштування EJS
 app.set("view engine", "ejs");
-
-// Вказуємо директорію для шаблонів EJS
 app.set("views", path.join(__dirname, "views"));
 
-// Підключаємо статичні файли (CSS, зображення, JS)
+// 📌 Статичні файли (CSS, JS, зображення)
 app.use(express.static(path.join(__dirname, "public")));
 
-// Головна сторінка
+// 📌 Головна сторінка
 app.get("/", (req, res) => {
     res.render("index");
 });
 
-// Сторінка "Послуги"
-app.get("/services", (req, res) => {
-    const services = [
-        { name: "Чищення зубів", description: "Професійна чистка зубів для здорової посмішки." },
-        { name: "Пломбування", description: "Якісне пломбування з використанням сучасних матеріалів." },
-        { name: "Відбілювання", description: "Безпечне відбілювання зубів для білосніжної посмішки." }
-    ];
-    res.render("services", { services });
+// 📌 Сторінка "Послуги" (дані з БД)
+app.get("/services", async (req, res) => {
+    try {
+        const result = await pool.query("SELECT * FROM services");
+        res.render("services", { services: result.rows });
+    } catch (err) {
+        console.error("Помилка при отриманні послуг:", err);
+        res.status(500).send("Помилка сервера");
+    }
 });
 
-// Сторінка "Пацієнти"
-app.get("/patients", (req, res) => {
-    const patients = [
-        { name: "Іван Петров", email: "ivan@example.com" },
-        { name: "Марія Іванова", email: "maria@example.com" }
-    ];
-    res.render("patients", { patients });
+// 📌 Сторінка "Пацієнти"
+app.get("/patients", async (req, res) => {
+    try {
+        const result = await pool.query("SELECT * FROM patients");
+        res.render("patients", { patients: result.rows });
+    } catch (err) {
+        console.error("Помилка при отриманні пацієнтів:", err);
+        res.status(500).send("Помилка сервера");
+    }
 });
 
-// Сторінка "Запис на прийом"
-app.get("/appointments", (req, res) => {
-    res.render("appointments");
+// 📌 Сторінка "Запис на прийом"
+app.get("/appointments", async (req, res) => {
+    try {
+        const patientsResult = await pool.query("SELECT * FROM patients");
+        const servicesResult = await pool.query("SELECT * FROM services");
+
+        res.render("appointments", { 
+            patients: patientsResult.rows, 
+            services: servicesResult.rows 
+        });
+    } catch (err) {
+        console.error("Помилка при отриманні даних:", err);
+        res.status(500).send("Помилка сервера");
+    }
 });
 
-// Встановлюємо порт
-const port = process.env.PORT || 10000;
+// 📌 Запуск сервера
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+    console.log(`Сервер працює на http://localhost:${port}`);
 });
