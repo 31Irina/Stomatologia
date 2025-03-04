@@ -7,9 +7,19 @@ const port = process.env.PORT || 10000;
 
 // Підключення до PostgreSQL через Render
 const pool = new Pool({
-    connectionString: 'postgresql://dentistry_system_user:1234ab@dpg-cv3c0gt2ng1s73ftssug-a.oregon-postgres.render.com/dentistry_system',
-    ssl: { rejectUnauthorized: false } // Включення SSL для підключення до Render
+    connectionString: 'postgresql://dentistry_system_user:1234ab@dpg-cv3c0gt2ng1s73ftssug-a.oregon-postgres.render.com:5432/dentistry_system',
+    ssl: { rejectUnauthorized: false }
 });
+
+// Перевірка підключення до бази даних
+pool.connect()
+    .then(client => {
+        console.log('Підключення до бази даних успішне');
+        client.release();
+    })
+    .catch(err => {
+        console.error('Помилка підключення до бази даних:', err.message);
+    });
 
 // Middleware для обробки JSON і URL-encoded даних
 app.use(express.json());
