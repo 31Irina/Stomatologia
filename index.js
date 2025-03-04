@@ -5,33 +5,32 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 10000;
 
-// 📌 Підключення до PostgreSQL через Render
+// Підключення до PostgreSQL через Render
 const pool = new Pool({
-    connectionString: 'postgresql://dentistry_system_user:5114PBCw7w0DV0QpGRNzb6eWNjdIy5bw@dpg-cv3c0gt2ng1s73ftssug-a/dentistry_system',
+    connectionString: 'postgresql://dentistry_system_user:1234ab@dpg-cv3c0gt2ng1s73ftssug-a/dentistry_system',
     ssl: { rejectUnauthorized: false } // Включення SSL для підключення до Render
 });
 
-// 📌 Middleware для обробки JSON і URL-encoded даних
+// Middleware для обробки JSON і URL-encoded даних
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// 📌 Налаштування EJS як шаблонізатора
+// Налаштування EJS як шаблонізатора
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// 📌 Статичні файли (CSS, JS, зображення)
+// Статичні файли (CSS, JS, зображення)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 📌 Головна сторінка
+// Головна сторінка
 app.get('/', (req, res) => {
     res.render('index');
 });
 
-// 📌 Сторінка послуг
+// Сторінка послуг
 app.get('/services', async (req, res) => {
     try {
-        // Перевірка: якщо ваша таблиця знаходиться в схемі "public"
-        const result = await pool.query('SELECT * FROM public.services');
+        const result = await pool.query('SELECT * FROM services');
         res.render('services', { services: result.rows });
     } catch (err) {
         console.error('Помилка при отриманні послуг:', err);
@@ -39,11 +38,11 @@ app.get('/services', async (req, res) => {
     }
 });
 
-// 📌 Сторінка запису на прийом
+// Сторінка запису на прийом
 app.get('/appointments', async (req, res) => {
     try {
-        const patientsResult = await pool.query('SELECT * FROM public.patients');
-        const servicesResult = await pool.query('SELECT * FROM public.services');
+        const patientsResult = await pool.query('SELECT * FROM patients');
+        const servicesResult = await pool.query('SELECT * FROM services');
 
         res.render('appointments', { 
             patients: patientsResult.rows, 
@@ -55,7 +54,7 @@ app.get('/appointments', async (req, res) => {
     }
 });
 
-// 📌 Реєстрація пацієнта
+// Реєстрація пацієнта
 app.post('/register-patient', async (req, res) => {
     const { name, email, phone } = req.body;
 
@@ -65,7 +64,7 @@ app.post('/register-patient', async (req, res) => {
 
     try {
         const result = await pool.query(
-            'INSERT INTO public.patients (name, email, phone) VALUES ($1, $2, $3) RETURNING *', 
+            'INSERT INTO patients (name, email, phone) VALUES ($1, $2, $3) RETURNING *', 
             [name, email, phone]
         );
 
@@ -76,7 +75,7 @@ app.post('/register-patient', async (req, res) => {
     }
 });
 
-// 📌 Створення запису на прийом
+// Створення запису на прийом
 app.post('/appointments', async (req, res) => {
     const { patient_id, service_id, appointment_date, status } = req.body;
 
@@ -86,7 +85,7 @@ app.post('/appointments', async (req, res) => {
 
     try {
         await pool.query(
-            'INSERT INTO public.appointments (patient_id, service_id, appointment_date, status) VALUES ($1, $2, $3, $4)', 
+            'INSERT INTO appointments (patient_id, service_id, appointment_date, status) VALUES ($1, $2, $3, $4)', 
             [patient_id, service_id, appointment_date, status]
         );
 
@@ -97,7 +96,7 @@ app.post('/appointments', async (req, res) => {
     }
 });
 
-// 📌 Відображення списку записів на прийом
+// Відображення списку записів на прийом
 app.get('/appointments-list', async (req, res) => {
     try {
         const appointmentsResult = await pool.query(`
@@ -106,9 +105,9 @@ app.get('/appointments-list', async (req, res) => {
                    services.name AS service_name, 
                    appointments.appointment_date, 
                    appointments.status 
-            FROM public.appointments
-            JOIN public.patients ON appointments.patient_id = patients.id
-            JOIN public.services ON appointments.service_id = services.id
+            FROM appointments
+            JOIN patients ON appointments.patient_id = patients.id
+            JOIN services ON appointments.service_id = services.id
         `);
 
         res.render('appointments-list', { appointments: appointmentsResult.rows });
@@ -118,10 +117,10 @@ app.get('/appointments-list', async (req, res) => {
     }
 });
 
-// 📌 Відображення списку пацієнтів
+// Відображення списку пацієнтів
 app.get('/patients', async (req, res) => {
     try {
-        const result = await pool.query('SELECT * FROM public.patients');
+        const result = await pool.query('SELECT * FROM patients');
         res.render('patients', { patients: result.rows });
     } catch (err) {
         console.error('Помилка при отриманні пацієнтів:', err);
@@ -129,12 +128,12 @@ app.get('/patients', async (req, res) => {
     }
 });
 
-// 📌 Сторінка контактів
+// Сторінка контактів
 app.get('/contacts', (req, res) => {
     res.render('contacts');
 });
 
-// 📌 Запуск сервера
+// Запуск сервера
 app.listen(port, () => {
     console.log(`Сервер працює на http://localhost:${port}`);
 });
