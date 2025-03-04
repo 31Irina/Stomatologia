@@ -30,7 +30,8 @@ app.get('/', (req, res) => {
 // 📌 Сторінка послуг
 app.get('/services', async (req, res) => {
     try {
-        const result = await pool.query('SELECT * FROM services');
+        // Перевірка: якщо ваша таблиця знаходиться в схемі "public"
+        const result = await pool.query('SELECT * FROM public.services');
         res.render('services', { services: result.rows });
     } catch (err) {
         console.error('Помилка при отриманні послуг:', err);
@@ -41,8 +42,8 @@ app.get('/services', async (req, res) => {
 // 📌 Сторінка запису на прийом
 app.get('/appointments', async (req, res) => {
     try {
-        const patientsResult = await pool.query('SELECT * FROM patients');
-        const servicesResult = await pool.query('SELECT * FROM services');
+        const patientsResult = await pool.query('SELECT * FROM public.patients');
+        const servicesResult = await pool.query('SELECT * FROM public.services');
 
         res.render('appointments', { 
             patients: patientsResult.rows, 
@@ -64,7 +65,7 @@ app.post('/register-patient', async (req, res) => {
 
     try {
         const result = await pool.query(
-            'INSERT INTO patients (name, email, phone) VALUES ($1, $2, $3) RETURNING *', 
+            'INSERT INTO public.patients (name, email, phone) VALUES ($1, $2, $3) RETURNING *', 
             [name, email, phone]
         );
 
@@ -85,7 +86,7 @@ app.post('/appointments', async (req, res) => {
 
     try {
         await pool.query(
-            'INSERT INTO appointments (patient_id, service_id, appointment_date, status) VALUES ($1, $2, $3, $4)', 
+            'INSERT INTO public.appointments (patient_id, service_id, appointment_date, status) VALUES ($1, $2, $3, $4)', 
             [patient_id, service_id, appointment_date, status]
         );
 
@@ -105,9 +106,9 @@ app.get('/appointments-list', async (req, res) => {
                    services.name AS service_name, 
                    appointments.appointment_date, 
                    appointments.status 
-            FROM appointments
-            JOIN patients ON appointments.patient_id = patients.id
-            JOIN services ON appointments.service_id = services.id
+            FROM public.appointments
+            JOIN public.patients ON appointments.patient_id = patients.id
+            JOIN public.services ON appointments.service_id = services.id
         `);
 
         res.render('appointments-list', { appointments: appointmentsResult.rows });
@@ -120,7 +121,7 @@ app.get('/appointments-list', async (req, res) => {
 // 📌 Відображення списку пацієнтів
 app.get('/patients', async (req, res) => {
     try {
-        const result = await pool.query('SELECT * FROM patients');
+        const result = await pool.query('SELECT * FROM public.patients');
         res.render('patients', { patients: result.rows });
     } catch (err) {
         console.error('Помилка при отриманні пацієнтів:', err);
