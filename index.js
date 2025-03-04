@@ -5,33 +5,42 @@ const app = express();
 // Встановлюємо EJS як шаблонний движок
 app.set("view engine", "ejs");
 
-// Вказуємо директорію для збереження шаблонів EJS
+// Вказуємо директорію для шаблонів EJS
 app.set("views", path.join(__dirname, "views"));
 
-// Статичні файли (CSS, JS, зображення)
+// Підключаємо статичні файли (CSS, зображення, JS)
 app.use(express.static(path.join(__dirname, "public")));
 
-// Головний маршрут для рендерингу сторінки
+// Головна сторінка
 app.get("/", (req, res) => {
-    res.render("index"); // Ваш шаблон 'index.ejs'
+    res.render("index");
 });
 
-// Маршрут для послуг
+// Сторінка "Послуги"
 app.get("/services", (req, res) => {
-    res.render("services"); // Ваш шаблон 'services.ejs'
+    const services = [
+        { name: "Чищення зубів", description: "Професійна чистка зубів для здорової посмішки." },
+        { name: "Пломбування", description: "Якісне пломбування з використанням сучасних матеріалів." },
+        { name: "Відбілювання", description: "Безпечне відбілювання зубів для білосніжної посмішки." }
+    ];
+    res.render("services", { services });
 });
 
-// Маршрут для пацієнтів
+// Сторінка "Пацієнти"
 app.get("/patients", (req, res) => {
-    res.render("patients"); // Ваш шаблон 'patients.ejs'
+    const patients = [
+        { name: "Іван Петров", email: "ivan@example.com" },
+        { name: "Марія Іванова", email: "maria@example.com" }
+    ];
+    res.render("patients", { patients });
 });
 
-// Маршрут для запису на прийом
+// Сторінка "Запис на прийом"
 app.get("/appointments", (req, res) => {
-    res.render("appointments"); // Ваш шаблон 'appointments.ejs'
+    res.render("appointments");
 });
 
-// Встановлюємо порт для сервера
+// Встановлюємо порт
 const port = process.env.PORT || 10000;
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
