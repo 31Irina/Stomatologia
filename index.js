@@ -7,7 +7,7 @@ const port = process.env.PORT || 10000;
 
 // Підключення до PostgreSQL через Render
 const pool = new Pool({
-    connectionString: 'postgresql://dentistry_system_user:1234ab@dpg-cv3c0gt2ng1s73ftssug-a/dentistry_system',
+    connectionString: 'postgresql://dentistry_system_user:1234ab@dpg-cv3c0gt2ng1s73ftssug-a.oregon-postgres.render.com/dentistry_system',
     ssl: { rejectUnauthorized: false } // Включення SSL для підключення до Render
 });
 
